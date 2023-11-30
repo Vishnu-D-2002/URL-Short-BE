@@ -11,6 +11,8 @@ userRoute.post('/new-password', userController.newPassword);
 userRoute.get('/allusers', userController.allusers);
 
 userRoute.post('/url', authenticate, urlController.urlLong);
+userRoute.post('/redirect', authenticate, urlController.urlRedirect);
+userRoute.get('/:shortString', authenticate,urlController.getRedirect);
 userRoute.get('/', authenticate,userController.getProfile);
 
 module.exports = userRoute;
