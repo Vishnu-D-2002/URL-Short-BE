@@ -22,24 +22,6 @@ const urlController = {
         }
     },
 
-    urlRedirect: async (req, res) => {
-        try {
-            const { shortString } = req.params;
-
-            const url = await URL_Short.findOne({ shortURL: `/${shortString}` });
-
-            if (url) {
-                // Redirect to the original long URL
-                return res.redirect(url.longURL);
-            } else {
-                return res.status(404).json({ message: "URL not found" });
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: "Internal Server Error", error });
-        }
-    },
-
     getRedirect: async (req, res) => {
     try {
         const { shortString } = req.params;

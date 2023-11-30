@@ -10,9 +10,9 @@ userRoute.post('/reset-password', userController.resetPassword);
 userRoute.post('/new-password', userController.newPassword);
 userRoute.get('/allusers', userController.allusers);
 
+userRoute.get('/', authenticate ,userController.getProfile);
 userRoute.post('/url', authenticate, urlController.urlLong);
-userRoute.post('/redirect', authenticate, urlController.urlRedirect);
 userRoute.get('/:shortString', authenticate,urlController.getRedirect);
-userRoute.get('/', authenticate,userController.getProfile);
+
 
 module.exports = userRoute;
