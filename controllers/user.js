@@ -49,7 +49,7 @@ const userController = {
             return res.status(404).json({ message: "Password is wrong" });
         }
 
-        const token = jwt.sign({ email }, JWT_SECRET);
+        const token = jwt.sign({ email, id:user._id }, JWT_SECRET);
 
         return res.status(200).json({ message: "Login successfully ", token, user });
         }
@@ -150,6 +150,27 @@ const userController = {
             res.status(500).json({ message: "Internal Server Error", error });
         }
     },
+
+    getProfile: async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        if (!userId) {
+            return res.status(401).json({ message: "User ID not found in the request" });
+        }
+
+        const user = await User.findById(userId, {});
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ message: "Authenticated Profile", user });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Internal Server Error", error: error.message });
+        }
+    }
 
 };
 
