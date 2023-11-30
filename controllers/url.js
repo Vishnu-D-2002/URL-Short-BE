@@ -3,12 +3,12 @@ const URL_Short = require("../models/url");
 const urlController = {
     urlLong: async (req, res) => {
         try {
-            const originalURL = req.body.originalURL; 
+            const longURL = req.body.longURL; 
 
-            let url = await URL_Short.findOne({ originalURL });
+            let url = await URL_Short.findOne({ longURL });
 
             if (!url) {
-                url= new URL_Short({ originalURL });
+                url= new URL_Short({ longURL });
                 await url.save();
                 res.status(200).json({ message: "New long URL saved" });
             } else {
