@@ -13,6 +13,6 @@ userRoute.get('/allusers', userController.allusers);
 userRoute.get('/', authenticate ,userController.getProfile);
 userRoute.post('/url', authenticate, urlController.urlLong);
 userRoute.get('/:shortString', authenticate,urlController.getRedirect);
-
+userRoute.delete('/:shortString', authenticate, urlController.deleteUrl);
 
 module.exports = userRoute;

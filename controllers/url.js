@@ -6,11 +6,13 @@ const urlController = {
         try {
             const { longURL } = req.body;
 
+            let userId = req.userId;
+
             let url = await URL_Short.findOne({ longURL });
 
             if (!url) {
                 const shortURL = `/${shortid.generate()}`;
-                url = new URL_Short({ longURL, shortURL });
+                url = new URL_Short({ longURL, shortURL , userId});
                 await url.save();
                 res.status(200).json({ message: "New long URL saved", shortURL });
             } else {
@@ -26,9 +28,17 @@ const urlController = {
     try {
         const { shortString } = req.params;
 
-        const url = await URL_Short.findOne({ shortURL: `/${shortString}` });
+        const url = await URL_Short.findOneAndUpdate(
+        { shortURL: `/${shortString}` },
+        {
+            $push: { visitHistory: { timestamp: Date.now() } }
+        },
+        { new: true }
+        );
 
         if (url) {
+            url.totalClicks = url.visitHistory.length;
+            await url.save();
             // Redirect to the original long URL using status code 307
             res.status(307).redirect(url.longURL);
         } else {
@@ -40,6 +50,20 @@ const urlController = {
     }
     },
     
+    deleteUrl: async (req, res) => {
+        try {
+            const { shortString } = req.params;
+
+            const user = await URL_Short.findOneAndDelete({ shortURL: `/${shortString}` },);
+
+            if (user) {
+               return res.status(200).json({ message: "URL Deleted successfully" });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Internal Server Error", error });
+        }
+    }
 };
 
 module.exports = urlController;
