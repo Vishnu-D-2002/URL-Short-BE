@@ -1,5 +1,6 @@
 const shortid = require("shortid");
 const URL_Short = require("../models/url");
+const User = require("../models/user");
 
 const urlController = {
     urlLong: async (req, res) => {
@@ -44,24 +45,27 @@ const urlController = {
         } else {
             res.status(404).json({ message: "URL not found" });
         }
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error", error });
     }
     },
     
-    deleteUrl: async (req, res) => {
-        try {
-            const { shortString } = req.params;
+    deleteURL: async (req, res) => {
+    try {
+        const { urlId } = req.params;
 
-            const user = await URL_Short.findOneAndDelete({ shortURL: `/${shortString}` },);
+        const deletedURL = await URL_Short.findByIdAndDelete({shortURL:`/${urlId}`});
 
-            if (user) {
-               return res.status(200).json({ message: "URL Deleted successfully" });
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: "Internal Server Error", error });
+        if (deletedURL) {
+            res.status(200).json({ message: "URL deleted successfully" });
+        } else {
+            res.status(404).json({ message: "URL not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error", error });
         }
     }
 };

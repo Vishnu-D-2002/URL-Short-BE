@@ -4,7 +4,11 @@ const userSchema = new mongoose.Schema({
     name: String,
     email: String,
     passwordHash: String,
-    randomString:String
+    randomString: String,
+    total_URLs: {
+        type: Number,
+        default :0,
+    }
 }, { versionKey: false });
 
 userSchema.set('toJSON', {

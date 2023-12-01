@@ -62,7 +62,7 @@ const userController = {
 
     resetPassword: async (req, res) => {
         try {
-         const { email, password } = req.body;
+         const { email } = req.body;
 
         const user = await User.findOne({ email });
 
