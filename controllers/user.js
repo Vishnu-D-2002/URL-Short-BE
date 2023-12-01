@@ -8,7 +8,7 @@ const PasswordReset = require("../models/password");
 const userController = {
     
     signup: async (req, res) => {
-        const { name, email, password } = req.body;
+        const { firstName, lastName , email, password } = req.body;
 
         try {
             const user = await User.findOne({ email });
@@ -17,7 +17,8 @@ const userController = {
                 const passwordHash = await bcrypt.hash(password, 10);
 
                 const newUser = new User({
-                    name,
+                    firstName,
+                    lastName,
                     email,
                     passwordHash
                 });
