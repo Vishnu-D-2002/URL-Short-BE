@@ -11,13 +11,16 @@ const urlController = {
 
             let url = await URL_Short.findOne({ longURL });
 
+            const user = await User.findById({ _id: userId });
             if (!url) {
                 const shortURL = `/${shortid.generate()}`;
-                url = new URL_Short({ longURL, shortURL , userId});
+                url = new URL_Short({ longURL, shortURL, userId });
+                user.total_URLs += 1;
                 await url.save();
-                res.status(200).json({ message: "New long URL saved", shortURL });
+                await user.save();
+                return res.status(200).json({ message: "New long URL saved", shortURL });
             } else {
-                res.status(200).json({ message: "URL already exists", shortURL: url.shortURL });
+                return res.status(200).json({ message: "URL already exists", shortURL: url.shortURL });
             }
         } catch (error) {
             console.error(error);
@@ -54,20 +57,25 @@ const urlController = {
     
     deleteURL: async (req, res) => {
     try {
-        const { urlId } = req.params;
+        const userId = req.userId;
+        const { shortString } = req.params;
 
-        const deletedURL = await URL_Short.findByIdAndDelete({shortURL:`/${urlId}`});
+        const deletedURL = await URL_Short.findOneAndDelete({ shortURL: `/${shortString}`, userId: userId });
 
         if (deletedURL) {
-            res.status(200).json({ message: "URL deleted successfully" });
+            // Decrement the total URLs for the user
+            await User.findByIdAndUpdate(userId, { $inc: { total_URLs: -1 } });
+
+            return res.status(200).json({ message: "URL deleted successfully" });
         } else {
-            res.status(404).json({ message: "URL not found" });
+            return res.status(404).json({ message: "URL not found" });
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error", error });
-        }
     }
+    }
+
 };
 
 module.exports = urlController;
