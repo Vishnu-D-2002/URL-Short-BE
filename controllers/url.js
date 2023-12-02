@@ -74,6 +74,22 @@ const urlController = {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error", error });
     }
+    },
+
+    getURLs: async (req, res) => {
+        try {
+            const userId = req.userId;
+
+            const URLs=await URL_Short.findById({ userId });
+            if(URLs)
+                return res.status(200).json({ message: "All URLs are Fetched Successfully" });
+            else
+                return res.status(404).json({ message: "No URLs found for you" });
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Internal Server Error", error });
+        }
     }
 
 };
