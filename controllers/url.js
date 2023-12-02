@@ -80,17 +80,20 @@ const urlController = {
         try {
             const userId = req.userId;
 
-            const URLs=await URL_Short.findById({ userId });
-            if(URLs)
-                return res.status(200).json({ message: "All URLs are Fetched Successfully" });
-            else
+            const URLs = await URL_Short.find({ userId: userId });
+
+            if (URLs.length > 0) {
+                return res.status(200).json({ message: "All URLs are Fetched Successfully", URLs });
+            } else {
                 return res.status(404).json({ message: "No URLs found for you" });
+            }
 
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: "Internal Server Error", error });
         }
-    }
+    },
+
 
 };
 
