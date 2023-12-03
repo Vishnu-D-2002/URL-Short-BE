@@ -93,7 +93,8 @@ const userController = {
         from: '143.lovvable@gmail.com',
         to: email,
         subject: 'Password Reset Link',
-        text:`You are requested to change the password of user login ,So please enter this otp key = ${randomString}`
+        text: `You are requested to change the password of user login ,So please click this url
+        https://main--spiffy-medovik-29bd79.netlify.app//resetPassword/${randomString}`
         }
 
         transporter.sendMail(message, (err, info) => {
