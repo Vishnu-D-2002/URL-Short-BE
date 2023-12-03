@@ -71,7 +71,7 @@ const userController = {
             return res.status(401).json({ message: "User not found" });
         }
 
-        const randomString = Math.random().toString(36).substring(7);
+        const randomString = Math.random().toString(36).slice(-7);
 
         await PasswordReset.create({
             email,
