@@ -9,7 +9,7 @@ const urlController = {
 
             let userId = req.userId;
 
-            let url = await URL_Short.findOne({ longURL });
+            let url = await URL_Short.findOne({ userId, longURL });
 
             const user = await User.findById({ _id: userId });
             if (!url) {
