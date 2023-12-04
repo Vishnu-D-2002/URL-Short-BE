@@ -17,5 +17,6 @@ userRoute.get('/AllURL', authenticate, urlController.getURLs);
 userRoute.get('/', authenticate ,userController.getProfile);
 userRoute.get('/:shortString',urlController.getRedirect);
 userRoute.delete('/:shortString', authenticate, urlController.deleteURL);
+userRoute.get('/users/totalURLs', urlController.totalURLs);
 
 module.exports = userRoute;
