@@ -38,7 +38,7 @@ const userController = {
         
         const { email, password } = req.body;
         try {
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email , activated :true });
 
         if (!user) {
             return res.status(401).json({ message: "User not found" });
