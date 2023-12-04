@@ -24,7 +24,7 @@ const userController = {
                 });
 
                 await newUser.save();
-                return res.status(200).json({ message: "User created successfully", newUser });
+                return res.status(200).json({ message: "Activation Link Sent Successfull to your Email ,Please Active and then LOGIN", newUser });
             }
 
             return res.status(500).json({ message: "Email already exists please login" });
