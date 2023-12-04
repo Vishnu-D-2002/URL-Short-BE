@@ -61,6 +61,70 @@ const userController = {
 
     },
 
+    activationLink: async (req, res) => {
+        try {
+         const { email } = req.params;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+
+        const activationToken = Math.random().toString(36).slice(-7);
+
+        user.activationToken=activationToken;
+        await user.save();
+            
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: '143.lovvable@gmail.com',
+                pass: 'fnmxhibtwjgdzajq'
+            },
+        });
+
+        const message = {
+        from: '143.lovvable@gmail.com',
+        to: email,
+        subject: 'Account Activation Link',
+        text: `You are requested to Activate your Account ,Click below Link to Activate
+        https://main--spiffy-medovik-29bd79.netlify.app/activate/${activationToken}`
+        }
+
+        transporter.sendMail(message, (err, info) => {
+            if (err) {
+                res.status(404).json({ message: "something went wrong,try again !" });
+            }
+            res.status(200).json({ message: "Activation Link sent successfully" , info });
+        })
+        } catch (error) {
+             console.error(error);
+            res.status(500).json({ message: "Internal Server Error",error });
+        }
+    },
+
+    activateAccount: async (req, res) => {
+        try {
+            const { activationToken } = req.params;
+
+            const user = await User.findOne({ activationToken, activated: false });
+  
+            if (user) {
+                user.activationToken = null,
+                user.activated = true
+                await user.save();
+                res.json({ message: "Account Activated Succeessfully" });
+            }
+            else {
+                res.json({ message: "Token Invalid or Already Activated" });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Internal Server Error",error });
+        }
+    },
+
     resetPassword: async (req, res) => {
         try {
          const { email } = req.body;

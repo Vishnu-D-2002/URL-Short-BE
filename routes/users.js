@@ -9,6 +9,8 @@ userRoute.post('/signin', userController.signin);
 userRoute.post('/reset-password', userController.resetPassword);
 userRoute.post('/new-password', userController.newPassword);
 userRoute.get('/allusers', userController.allusers);
+userRoute.post('/:email', userController.activationLink);
+userRoute.get('/activate/:activationToken', userController.activateAccount);
 
 userRoute.get('/AllURL', authenticate, urlController.getURLs);
 userRoute.get('/', authenticate ,userController.getProfile);

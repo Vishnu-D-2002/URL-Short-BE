@@ -9,7 +9,12 @@ const userSchema = new mongoose.Schema({
     total_URLs: {
         type: Number,
         default :0,
-    }
+    },
+    activationToken: String,
+    activated: {
+        type: Boolean,
+        default:false,
+    },
 }, { versionKey: false });
 
 userSchema.set('toJSON', {
