@@ -106,36 +106,22 @@ const urlController = {
     URLCounts: async (req, res) => {
         try {
             const today = new Date();
-            today.setUTCHours(0, 0, 0, 0);
-
-            const tomorrow = new Date(today);
-            tomorrow.setDate(today.getDate() + 1);
-
-            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-            lastDayOfMonth.setUTCHours(23, 59, 59, 999);
+            const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
+            const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
 
             const result = await URL_Short.aggregate([
                 {
                     $match: {
                         createdAt: {
-                            $gte: today,
-                            $lt: lastDayOfMonth,
+                            $gte: startOfDay,
+                            $lt: endOfDay,
                         },
                     },
                 },
                 {
                     $group: {
                         _id: null,
-                        totalToday: {
-                            $sum: {
-                                $cond: {
-                                    if: { $and: [{ $gte: ["$createdAt", today] }, { $lt: ["$createdAt", tomorrow] }] },
-                                    then: 1,
-                                    else: 0,
-                                },
-                            },
-                        },
+                        totalToday: { $sum: 1 },
                         totalThisMonth: { $sum: 1 },
                     },
                 },
